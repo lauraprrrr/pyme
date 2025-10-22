@@ -5,6 +5,7 @@ import { useForm } from '@mantine/form'; // <-- Quitamos zodResolver de aquí
 import { zodResolver } from 'mantine-form-zod-resolver'; // <-- CORRECTO (sin el scope)
 import { TextInput, Button, FileInput, Textarea, Box, LoadingOverlay, Alert } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
+import { z } from 'zod';
 //...
 
 // 1. Definimos el esquema de validación con Zod
