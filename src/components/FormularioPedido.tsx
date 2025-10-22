@@ -52,26 +52,48 @@ export function FormularioPedido() {
       formData.append('inspiracion', values.inspiracion);
     }
 
+    // ... (dentro de la función handleSubmit, después de formData.append...)
+
     try {
-      // Aún no hemos creado esta API, pero lo haremos en el paso siguiente
-      const response = await fetch('/api/pedidos', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Algo salió mal. Intenta de nuevo.');
+        const response = await fetch('/api/pedidos', {
+          method: 'POST',
+          body: formData,
+        });
+  
+        if (!response.ok) {
+          // Si la respuesta no es OK, intentamos leer el error que envía el backend
+          let errorMsg = 'Algo salió mal. Intenta de nuevo.';
+          try {
+            // El backend envía un JSON como: { error: "Mensaje de error" }
+            const errorData = await response.json();
+            if (errorData && errorData.error) {
+              errorMsg = errorData.error;
+            }
+          } catch (jsonError) {
+            // Si el error no es JSON, usamos el texto de estado (ej: "500 Internal Server Error")
+            errorMsg = response.statusText || errorMsg;
+          }
+          throw new Error(errorMsg);
+        }
+  
+        // ¡Éxito!
+        setSuccess(true);
+        form.reset();
+  
+      } catch (err) { // <-- AQUÍ ESTÁ EL CAMBIO (quitamos el ': any')
+  
+        // Ahora comprobamos de forma segura si 'err' es un objeto Error
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          // Fallback por si 'err' no es un objeto Error
+          setError('Ocurrió un error inesperado.');
+        }
+  
+      } finally {
+        setLoading(false);
       }
-
-      // ¡Éxito!
-      setSuccess(true);
-      form.reset();
-
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+  // ... (fin de la función handleSubmit)
   };
 
   return (
