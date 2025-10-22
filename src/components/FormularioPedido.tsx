@@ -1,10 +1,11 @@
 'use client'; // <-- Fundamental. Los formularios son interactivos.
 
-import { useForm, zodResolver } from '@mantine/form';
+// DESPUÉS (CORRECTO)
+import { useForm } from '@mantine/form'; // <-- Quitamos zodResolver de aquí
+import { zodResolver } from 'mantine-form-zod-resolver'; // <-- CORRECTO (sin el scope)
 import { TextInput, Button, FileInput, Textarea, Box, LoadingOverlay, Alert } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { useState } from 'react';
-import { z } from 'zod'; // Para validación
+//...
 
 // 1. Definimos el esquema de validación con Zod
 const schema = z.object({
@@ -69,7 +70,8 @@ export function FormularioPedido() {
             if (errorData && errorData.error) {
               errorMsg = errorData.error;
             }
-          } catch (_jsonError) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            } catch (_jsonError) {
             // Si el error no es JSON, usamos el texto de estado (ej: "500 Internal Server Error")
             errorMsg = response.statusText || errorMsg;
           }
