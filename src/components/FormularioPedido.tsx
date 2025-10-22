@@ -6,6 +6,7 @@ import { zodResolver } from 'mantine-form-zod-resolver'; // <-- CORRECTO (sin el
 import { TextInput, Button, FileInput, Textarea, Box, LoadingOverlay, Alert } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { z } from 'zod';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useState } from 'react';
 //...
 
@@ -21,12 +22,14 @@ const schema = z.object({
   ).nullable(),
 });
 
+type FormValues = z.infer<typeof schema>;
+
 export function FormularioPedido() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const form = useForm({
+  const form = useForm<FormValues>({
     validate: zodResolver(schema),
     initialValues: {
       nombre: '',
@@ -38,7 +41,7 @@ export function FormularioPedido() {
   });
 
   // 4. Función que se ejecuta al enviar
-  const handleSubmit = async (values: typeof form.values) => {
+  const handleSubmit = async (values: FormValues) => {
     setLoading(true);
     setError(null);
     setSuccess(false);
