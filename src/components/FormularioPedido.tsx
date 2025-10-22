@@ -69,7 +69,7 @@ export function FormularioPedido() {
             if (errorData && errorData.error) {
               errorMsg = errorData.error;
             }
-          } catch (jsonError) {
+          } catch (_jsonError) {
             // Si el error no es JSON, usamos el texto de estado (ej: "500 Internal Server Error")
             errorMsg = response.statusText || errorMsg;
           }
